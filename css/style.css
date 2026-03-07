@@ -1,0 +1,387 @@
+/* ===== Stena Line Design Tokens ===== */
+:root {
+    --core-blue: #004a93;
+    --modern-blue: #1178df;
+    --mussla: #122f66;
+    --hav: rgb(26, 90, 154);
+    --himmel: #b4d4f9;
+    --himmel-light: #cae2fb;
+    --himmel-lighter: #e1edfd;
+    --sand: rgb(250, 246, 235);
+    --moln: #ffffff;
+    --silver: #949494;
+    --silver-light: #c9c9c9;
+    --silver-lighter: #f4f4f4;
+    --silver-ui: #ebebeb;
+    --tjara: rgb(51, 51, 51);
+    --green-600: #509e27;
+    --orange-300: #ffc400;
+    --red-400: #f1002e;
+
+    --font-primary: 'Open Sans', Arial, sans-serif;
+    --border-radius: 8px;
+    --border-radius-lg: 16px;
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.06);
+    --shadow-elevated: 0 4px 20px rgba(0, 74, 147, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background: var(--silver-lighter);
+    color: var(--tjara);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== Header ===== */
+.header {
+    background: var(--core-blue);
+    padding: 0 16px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 74, 147, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-inner {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+.stena-logo {
+    height: 24px;
+    width: auto;
+}
+
+/* ===== Main Container ===== */
+.container {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 24px 16px;
+    flex: 1;
+}
+
+/* ===== Hero ===== */
+.hero {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.hero h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--core-blue);
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+}
+
+.hero-sub {
+    font-size: 1rem;
+    color: var(--silver);
+    font-weight: 500;
+}
+
+/* ===== Stats Card ===== */
+.stats-card {
+    background: var(--moln);
+    border-radius: var(--border-radius-lg);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-card);
+}
+
+.stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    margin-bottom: 20px;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--core-blue);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--silver);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 4px;
+}
+
+/* ===== Progress Bar ===== */
+.progress-bar {
+    background: var(--silver-ui);
+    border-radius: 100px;
+    height: 12px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--modern-blue), var(--core-blue));
+    border-radius: 100px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-text {
+    font-size: 0.85rem;
+    color: var(--silver);
+    text-align: center;
+    font-weight: 500;
+}
+
+/* ===== Puzzle ===== */
+.puzzle-card {
+    background: var(--moln);
+    border-radius: var(--border-radius-lg);
+    padding: 12px;
+    box-shadow: var(--shadow-elevated);
+    margin-bottom: 20px;
+}
+
+.puzzle-container {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    width: 100%;
+    aspect-ratio: 9 / 8;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    gap: 1px;
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.puzzle-piece {
+    position: relative;
+    overflow: hidden;
+    background: var(--himmel-lighter);
+    transition: all 0.4s ease;
+}
+
+.puzzle-piece:not(.found) {
+    cursor: default;
+}
+
+/* Subtle wave pattern on unfound pieces */
+.puzzle-piece:not(.found)::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 30% 50%, rgba(0, 74, 147, 0.04) 0%, transparent 60%),
+        radial-gradient(circle at 70% 30%, rgba(17, 120, 223, 0.03) 0%, transparent 50%);
+}
+
+.puzzle-piece:not(.found)::after {
+    content: '?';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 700;
+    color: rgba(0, 74, 147, 0.12);
+}
+
+.puzzle-piece.found {
+    background: transparent;
+}
+
+.puzzle-piece.found::before,
+.puzzle-piece.found::after {
+    display: none;
+}
+
+.puzzle-piece .piece-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    display: block;
+}
+
+.puzzle-piece.found .piece-image {
+    opacity: 1;
+}
+
+/* Reveal animation */
+.puzzle-piece.just-found {
+    animation: revealPiece 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    z-index: 10;
+}
+
+@keyframes revealPiece {
+    0% { transform: scale(1.4) rotate(3deg); filter: brightness(1.8); }
+    60% { transform: scale(1.05) rotate(-1deg); filter: brightness(1.2); }
+    100% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+}
+
+/* ===== All Found Banner ===== */
+.all-found-banner {
+    background: linear-gradient(135deg, var(--core-blue), var(--modern-blue));
+    color: var(--moln);
+    border-radius: var(--border-radius-lg);
+    padding: 28px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-elevated);
+}
+
+.all-found-banner h2 {
+    font-size: 1.4rem;
+    margin-bottom: 6px;
+}
+
+.all-found-banner p {
+    opacity: 0.85;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ===== Modal ===== */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal {
+    background: var(--moln);
+    border-radius: var(--border-radius-lg);
+    padding: 40px 32px;
+    text-align: center;
+    max-width: 380px;
+    width: 100%;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+    animation: modalIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalIn {
+    from { transform: translateY(20px) scale(0.95); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.modal-icon {
+    font-size: 3.5rem;
+    margin-bottom: 16px;
+    line-height: 1;
+}
+
+.modal h2 {
+    font-size: 1.4rem;
+    color: var(--core-blue);
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.modal p {
+    color: var(--silver);
+    margin-bottom: 28px;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+/* ===== Buttons ===== */
+.btn {
+    border: none;
+    padding: 12px 32px;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-family: var(--font-primary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-primary {
+    background: var(--core-blue);
+    color: var(--moln);
+}
+
+.btn-primary:hover {
+    background: var(--mussla);
+}
+
+.btn-primary:active {
+    transform: scale(0.97);
+}
+
+/* ===== Confetti ===== */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    z-index: 1000;
+    animation: confettiFall 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes confettiFall {
+    0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+    100% { opacity: 0; transform: translateY(500px) rotate(720deg) scale(0.2); }
+}
+
+/* ===== Footer ===== */
+.footer {
+    text-align: center;
+    padding: 20px 16px;
+    color: var(--silver);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 500px) {
+    .hero h1 { font-size: 1.6rem; }
+    .stats-row { gap: 32px; }
+    .stat-number { font-size: 2rem; }
+    .puzzle-card { padding: 8px; }
+    .puzzle-piece:not(.found)::after { font-size: 0.65rem; }
+    .modal { padding: 32px 24px; }
+}
