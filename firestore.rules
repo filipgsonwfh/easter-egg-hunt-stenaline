@@ -1,11 +1,16 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Egg tokens - only accessible by exact document ID (no listing)
     match /eggs/{eggId} {
-      // Anyone can read egg status (view progress)
+      allow get: if true;
+      allow list: if false;
+      allow write: if true;
+    }
+
+    // Public progress - anyone can read which pieces are found
+    match /progress/{pieceId} {
       allow read: if true;
-      // Anyone can create/update an egg (scanning QR code)
-      // The transaction in app.js prevents double-scanning
       allow write: if true;
     }
   }

@@ -8,6 +8,7 @@
 
     const db = firebase.firestore();
     const eggsCollection = db.collection('eggs');
+    const progressCollection = db.collection('progress');
 
     // DOM elements
     const puzzleContainer = document.getElementById('puzzleContainer');
@@ -115,19 +116,18 @@
         }
     });
 
-    // ===== Real-time listener =====
+    // ===== Real-time listener on public progress collection =====
     function listenForUpdates() {
-        eggsCollection.where('found', '==', true).onSnapshot(snapshot => {
+        progressCollection.onSnapshot(snapshot => {
             foundPieces.clear();
             snapshot.forEach(doc => {
-                foundPieces.add(doc.data().pieceIndex);
+                foundPieces.add(parseInt(doc.id));
             });
             updateProgress();
         });
     }
 
     // ===== Handle QR scan =====
-    // Tokens are validated against Firestore, NOT client-side JS
     async function handleEggScan() {
         const params = new URLSearchParams(window.location.search);
         const token = params.get('egg');
@@ -142,7 +142,6 @@
             const result = await db.runTransaction(async (transaction) => {
                 const doc = await transaction.get(eggDocRef);
 
-                // Token doesn't exist in Firestore = invalid QR code
                 if (!doc.exists) {
                     return { invalid: true };
                 }
@@ -152,10 +151,18 @@
                     return { alreadyFound: true };
                 }
 
+                // Mark egg as found
                 transaction.update(eggDocRef, {
                     found: true,
                     foundAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+
+                // Write to public progress collection (piece index only, no token)
+                const progressRef = progressCollection.doc(String(data.pieceIndex));
+                transaction.set(progressRef, {
+                    foundAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
                 return { alreadyFound: false, pieceIndex: data.pieceIndex };
             });
 
