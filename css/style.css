@@ -1,3 +1,31 @@
+/* ===== Stena Sans Font ===== */
+@font-face {
+    font-family: "Stena Sans";
+    src: url('../fonts/StenaSans-Regular.woff2') format('woff2'),
+         url('../fonts/StenaSans-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Stena Sans";
+    src: url('../fonts/StenaSans-Medium.woff2') format('woff2'),
+         url('../fonts/StenaSans-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Stena Sans";
+    src: url('../fonts/StenaSans-Bold.woff2') format('woff2'),
+         url('../fonts/StenaSans-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
 /* ===== Stena Line WebUI Design Tokens ===== */
 :root {
     /* Brand colors */
