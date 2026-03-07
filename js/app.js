@@ -23,6 +23,7 @@
     const allFoundBanner = document.getElementById('allFoundBanner');
 
     let foundPieces = new Set();
+    let initialLoad = true;
 
     function buildPuzzleGrid() {
         puzzleContainer.innerHTML = '';
@@ -77,21 +78,31 @@
         }
     }
 
-    function spawnConfetti() {
-        const colors = ['#004a93', '#1178df', '#b4d4f9', '#ffc400', '#509e27', '#f1002e'];
-        for (let i = 0; i < 40; i++) {
+    function spawnEasterEggs() {
+        const eggs = ['🥚', '🐣', '🐰', '🌷', '🐥', '🥚', '🐣', '🥚'];
+        for (let i = 0; i < 30; i++) {
             const el = document.createElement('div');
-            el.className = 'confetti';
+            el.className = 'falling-egg';
+            el.textContent = eggs[Math.floor(Math.random() * eggs.length)];
             el.style.left = Math.random() * 100 + 'vw';
-            el.style.top = (Math.random() * 30 - 10) + 'vh';
-            el.style.background = colors[Math.floor(Math.random() * colors.length)];
-            el.style.width = (6 + Math.random() * 8) + 'px';
-            el.style.height = (6 + Math.random() * 8) + 'px';
-            el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-            el.style.animationDelay = (Math.random() * 0.5) + 's';
+            el.style.fontSize = (18 + Math.random() * 20) + 'px';
+            el.style.animationDelay = (Math.random() * 1) + 's';
+            el.style.animationDuration = (1.5 + Math.random() * 1.5) + 's';
             document.body.appendChild(el);
             el.addEventListener('animationend', () => el.remove());
         }
+    }
+
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'live-toast';
+        toast.innerHTML = '<span class="toast-dot"></span>' + message;
+        document.body.appendChild(toast);
+        requestAnimationFrame(() => toast.classList.add('show'));
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.addEventListener('transitionend', () => toast.remove());
+        }, 4000);
     }
 
     function showModal(icon, title, message) {
@@ -118,10 +129,22 @@
 
     function listenForUpdates() {
         progressCollection.onSnapshot(snapshot => {
-            foundPieces.clear();
+            const newPieces = [];
             snapshot.forEach(doc => {
-                foundPieces.add(parseInt(doc.id));
+                const idx = parseInt(doc.id);
+                if (!initialLoad && !foundPieces.has(idx)) {
+                    newPieces.push(idx);
+                }
+                foundPieces.add(idx);
             });
+            if (!initialLoad) {
+                newPieces.forEach(idx => {
+                    revealPiece(idx);
+                    spawnEasterEggs();
+                    showToast(`🥚 Egg found! Puzzle piece ${idx + 1} of ${TOTAL_EGGS} revealed!`);
+                });
+            }
+            initialLoad = false;
             updateProgress();
             showContent();
         }, err => {
@@ -172,7 +195,7 @@
                 showModal('', 'Already found!', 'This egg has already been found by someone. Keep looking!');
             } else {
                 revealPiece(result.pieceIndex);
-                spawnConfetti();
+                spawnEasterEggs();
                 const newCount = foundPieces.size + 1;
                 showModal(
                     '',
@@ -185,6 +208,29 @@
             showModal('', 'Something went wrong', 'Could not register the egg. Please try again!');
         }
     }
+
+    // Dark mode
+    const darkToggle = document.getElementById('darkToggle');
+    const darkToggleIcon = document.getElementById('darkToggleIcon');
+
+    function setTheme(dark) {
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+        darkToggleIcon.textContent = dark ? '☀️' : '🌙';
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+    }
+
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setTheme(saved ? saved === 'dark' : prefersDark);
+
+    darkToggle.addEventListener('click', () => {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        setTheme(!isDark);
+        if (!isDark && !localStorage.getItem('darkMsgShown')) {
+            showModal('🌙', 'Dark mode', 'This one is for you Gustav Svensson.');
+            localStorage.setItem('darkMsgShown', '1');
+        }
+    });
 
     buildPuzzleGrid();
     listenForUpdates();

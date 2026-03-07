@@ -106,7 +106,7 @@ body {
 .header {
     background: var(--moln);
     padding: var(--space-3) var(--space-2);
-    border-bottom: 3px solid #C8102E;
+    border-bottom: 3px solid #d70029;
 }
 
 .header-inner {
@@ -231,8 +231,9 @@ body {
 }
 
 .progress-text {
-    font-size: 13px;
-    color: var(--silver);
+    font-size: 14px;
+    color: var(--core-blue);
+    font-weight: var(--font-weight-bold);
     text-align: center;
 }
 
@@ -410,19 +411,62 @@ body {
     outline-offset: 2px;
 }
 
-/* ===== Confetti ===== */
-.confetti {
+/* ===== Falling Easter Eggs ===== */
+.falling-egg {
     position: fixed;
-    width: 8px;
-    height: 8px;
+    top: -40px;
     pointer-events: none;
     z-index: 1000;
-    animation: confettiFall 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: eggFall 2s ease-in forwards;
 }
 
-@keyframes confettiFall {
-    0% { opacity: 1; transform: translateY(0) rotate(0deg); }
-    100% { opacity: 0; transform: translateY(450px) rotate(540deg); }
+@keyframes eggFall {
+    0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+    70% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(calc(100vh + 40px)) rotate(720deg) scale(0.6); }
+}
+
+/* ===== Live Toast ===== */
+.live-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--moln);
+    color: var(--tjara);
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    font-weight: var(--font-weight-bold);
+    font-family: var(--font-primary);
+    z-index: 998;
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    border-left: 3px solid #d70029;
+}
+
+.live-toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.toast-dot {
+    width: 8px;
+    height: 8px;
+    background: #d70029;
+    border-radius: 50%;
+    display: inline-block;
+    animation: toastPulse 1s ease-in-out infinite;
+}
+
+@keyframes toastPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
 }
 
 /* ===== Footer ===== */
@@ -431,6 +475,100 @@ body {
     padding: var(--space-2);
     font-size: 12px;
     color: var(--silver);
+}
+
+/* ===== Dark mode toggle ===== */
+.header-inner {
+    position: relative;
+}
+
+.dark-toggle {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--silver-lighter);
+    border: 1.5px solid var(--silver-light);
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    animation: subtlePulse 3s ease-in-out infinite;
+}
+
+.dark-toggle:hover {
+    border-color: var(--silver);
+    background: var(--silver-ui);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    animation: none;
+}
+
+@keyframes subtlePulse {
+    0%, 100% { box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); }
+    50% { box-shadow: 0 1px 8px rgba(0, 74, 147, 0.25); }
+}
+
+.dark-toggle-icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* ===== Dark mode ===== */
+[data-theme="dark"] {
+    --moln: #1a1a2e;
+    --molnigare: #16162a;
+    --silver-lighter: #0f0f1a;
+    --silver-ui: #2a2a3e;
+    --silver-light: #3a3a50;
+    --silver: #8888a0;
+    --silver-dark: #aaaabc;
+    --tjara: #e8e8f0;
+    --himmel-lighter: #1e1e35;
+    --shadow-card: 0 2px 4px -1px rgba(0, 0, 0, 0.4), 0 1px 10px 0 rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .header {
+    background: #16162a;
+    border-bottom-color: #d70029;
+}
+
+[data-theme="dark"] .stena-logo {
+    background: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+[data-theme="dark"] .dark-toggle {
+    border-color: var(--silver-ui);
+}
+
+[data-theme="dark"] .dark-toggle:hover {
+    background: var(--silver-ui);
+}
+
+[data-theme="dark"] .progress-bar {
+    background: rgba(0, 74, 147, 0.25);
+}
+
+[data-theme="dark"] .modal-overlay {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .modal h2 {
+    color: var(--tjara);
+}
+
+[data-theme="dark"] .btn-primary {
+    background: var(--modern-blue);
+}
+
+[data-theme="dark"] .btn-primary:hover {
+    background: var(--core-blue);
 }
 
 /* ===== Responsive ===== */
