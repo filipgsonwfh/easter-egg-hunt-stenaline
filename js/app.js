@@ -10,7 +10,6 @@
     const eggsCollection = db.collection('eggs');
     const progressCollection = db.collection('progress');
 
-    // DOM elements
     const puzzleContainer = document.getElementById('puzzleContainer');
     const progressFill = document.getElementById('progressFill');
     const progressText = document.getElementById('progressText');
@@ -25,7 +24,6 @@
 
     let foundPieces = new Set();
 
-    // ===== Puzzle grid =====
     function buildPuzzleGrid() {
         puzzleContainer.innerHTML = '';
         for (let i = 0; i < TOTAL_EGGS; i++) {
@@ -48,7 +46,6 @@
         }
     }
 
-    // ===== Progress =====
     function updateProgress() {
         const count = foundPieces.size;
         const pct = (count / TOTAL_EGGS) * 100;
@@ -56,7 +53,7 @@
         eggsFoundEl.textContent = count;
         eggsRemainingEl.textContent = TOTAL_EGGS - count;
         progressFill.style.width = pct + '%';
-        progressText.textContent = Math.round(pct) + '% avklarat';
+        progressText.textContent = Math.round(pct) + '% complete';
 
         document.querySelectorAll('.puzzle-piece').forEach(piece => {
             const idx = parseInt(piece.dataset.index);
@@ -80,7 +77,6 @@
         }
     }
 
-    // ===== Confetti =====
     function spawnConfetti() {
         const colors = ['#004a93', '#1178df', '#b4d4f9', '#ffc400', '#509e27', '#f1002e'];
         for (let i = 0; i < 40; i++) {
@@ -98,7 +94,6 @@
         }
     }
 
-    // ===== Modal =====
     function showModal(icon, title, message) {
         modalIcon.textContent = icon;
         modalTitle.textContent = title;
@@ -116,7 +111,6 @@
         }
     });
 
-    // ===== Real-time listener on public progress collection =====
     function listenForUpdates() {
         progressCollection.onSnapshot(snapshot => {
             foundPieces.clear();
@@ -127,13 +121,11 @@
         });
     }
 
-    // ===== Handle QR scan =====
     async function handleEggScan() {
         const params = new URLSearchParams(window.location.search);
         const token = params.get('egg');
         if (!token) return;
 
-        // Clean URL
         window.history.replaceState({}, '', window.location.pathname);
 
         const eggDocRef = eggsCollection.doc(token);
@@ -151,13 +143,11 @@
                     return { alreadyFound: true };
                 }
 
-                // Mark egg as found
                 transaction.update(eggDocRef, {
                     found: true,
                     foundAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                // Write to public progress collection (piece index only, no token)
                 const progressRef = progressCollection.doc(String(data.pieceIndex));
                 transaction.set(progressRef, {
                     foundAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -167,26 +157,25 @@
             });
 
             if (result.invalid) {
-                showModal('\u274C', 'Ogiltigt \u00E4gg', 'Den h\u00E4r QR-koden verkar inte h\u00F6ra till jakten.');
+                showModal('', 'Invalid egg', 'This QR code does not belong to the hunt.');
             } else if (result.alreadyFound) {
-                showModal('\uD83D\uDD04', 'Redan hittat!', 'Det h\u00E4r \u00E4gget har redan hittats av n\u00E5gon. Forts\u00E4tt leta!');
+                showModal('', 'Already found!', 'This egg has already been found by someone. Keep looking!');
             } else {
                 revealPiece(result.pieceIndex);
                 spawnConfetti();
                 const newCount = foundPieces.size + 1;
                 showModal(
-                    '\uD83E\uDD5A',
-                    'Grattis!',
-                    `Du hittade ett \u00E4gg! Pusselbit ${result.pieceIndex + 1} av ${TOTAL_EGGS} avsl\u00F6jad. (${newCount}/${TOTAL_EGGS} hittade)`
+                    '',
+                    'Egg found!',
+                    `Puzzle piece ${result.pieceIndex + 1} of ${TOTAL_EGGS} revealed! (${newCount}/${TOTAL_EGGS} found)`
                 );
             }
         } catch (err) {
             console.error('Error scanning egg:', err);
-            showModal('\u26A0\uFE0F', 'N\u00E5got gick fel', 'Kunde inte registrera \u00E4gget. F\u00F6rs\u00F6k igen!');
+            showModal('', 'Something went wrong', 'Could not register the egg. Please try again!');
         }
     }
 
-    // ===== Init =====
     buildPuzzleGrid();
     listenForUpdates();
     handleEggScan();
