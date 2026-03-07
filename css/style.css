@@ -222,11 +222,9 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        135deg,
-        rgba(0, 74, 147, 0.03) 0%,
-        rgba(17, 120, 223, 0.06) 100%
-    );
+    background: url('../images/faviconV2.jpg') center center no-repeat;
+    background-size: 40%;
+    opacity: 0.15;
 }
 
 .puzzle-piece.found {
