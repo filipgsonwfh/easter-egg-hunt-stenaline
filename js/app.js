@@ -111,6 +111,8 @@
         }
     });
 
+    let dataLoaded = false;
+
     function listenForUpdates() {
         progressCollection.onSnapshot(snapshot => {
             foundPieces.clear();
@@ -118,6 +120,11 @@
                 foundPieces.add(parseInt(doc.id));
             });
             updateProgress();
+            if (!dataLoaded) {
+                dataLoaded = true;
+                document.getElementById('statsCard').style.opacity = '1';
+                document.getElementById('puzzleCard').style.opacity = '1';
+            }
         });
     }
 

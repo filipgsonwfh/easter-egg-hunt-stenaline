@@ -26,23 +26,23 @@
                 <p class="hero-sub">Find all 72 eggs and reveal the hidden puzzle!</p>
             </div>
 
-            <div class="card">
+            <div class="card" id="statsCard" style="opacity:0;transition:opacity 0.3s ease">
                 <div class="stats-row">
                     <div class="stat">
-                        <span class="stat-number" id="eggsFound">0</span>
+                        <span class="stat-number" id="eggsFound">-</span>
                         <span class="stat-label">Found</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-number" id="eggsRemaining">72</span>
+                        <span class="stat-number" id="eggsRemaining">-</span>
                         <span class="stat-label">Remaining</span>
                     </div>
                 </div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
-                <p class="progress-text" id="progressText">0% complete</p>
+                <p class="progress-text" id="progressText">&nbsp;</p>
             </div>
-            <div class="puzzle-card">
+            <div class="puzzle-card" id="puzzleCard" style="opacity:0;transition:opacity 0.3s ease">
                 <div class="puzzle-container" id="puzzleContainer"></div>
             </div>
 
