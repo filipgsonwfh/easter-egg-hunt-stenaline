@@ -254,8 +254,8 @@ body {
     aspect-ratio: 9 / 8;
     border-radius: var(--radius-sm);
     overflow: hidden;
-    gap: 1px;
-    background: var(--silver-ui);
+    gap: 2px;
+    background: white;
 }
 
 .puzzle-piece {
