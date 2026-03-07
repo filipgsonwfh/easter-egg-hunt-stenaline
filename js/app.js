@@ -111,7 +111,10 @@
         }
     });
 
-    let dataLoaded = false;
+    function showContent() {
+        document.getElementById('statsCard').style.opacity = '1';
+        document.getElementById('puzzleCard').style.opacity = '1';
+    }
 
     function listenForUpdates() {
         progressCollection.onSnapshot(snapshot => {
@@ -120,11 +123,11 @@
                 foundPieces.add(parseInt(doc.id));
             });
             updateProgress();
-            if (!dataLoaded) {
-                dataLoaded = true;
-                document.getElementById('statsCard').style.opacity = '1';
-                document.getElementById('puzzleCard').style.opacity = '1';
-            }
+            showContent();
+        }, err => {
+            console.error('Firestore listener error:', err);
+            updateProgress();
+            showContent();
         });
     }
 
