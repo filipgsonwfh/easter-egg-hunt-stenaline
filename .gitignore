@@ -1,2 +1,4 @@
 node_modules/
 qrcodes/
+service-account.json
+js/eggs.js
