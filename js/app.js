@@ -21,6 +21,8 @@
     const modalMessage = document.getElementById('modalMessage');
     const modalClose = document.getElementById('modalClose');
     const allFoundBanner = document.getElementById('allFoundBanner');
+    const activityFeed = document.getElementById('activityFeed');
+    const feedEmpty = document.getElementById('feedEmpty');
 
     let foundPieces = new Set();
 
@@ -66,6 +68,85 @@
             allFoundBanner.classList.remove('hidden');
         }
     }
+
+    // ===== Activity Feed =====
+    function timeAgo(date) {
+        const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+        if (seconds < 10) return 'just now';
+        if (seconds < 60) return seconds + 's ago';
+        const minutes = Math.floor(seconds / 60);
+        if (minutes < 60) return minutes + 'min ago';
+        const hours = Math.floor(minutes / 60);
+        if (hours < 24) return hours + 'h ago';
+        return Math.floor(hours / 24) + 'd ago';
+    }
+
+    function renderFeed(entries) {
+        if (entries.length === 0) {
+            feedEmpty.style.display = '';
+            return;
+        }
+        feedEmpty.style.display = 'none';
+
+        // Sort by time descending, take 10 most recent
+        entries.sort((a, b) => b.time - a.time);
+        const recent = entries.slice(0, 10);
+
+        // Keep existing items to avoid re-animating
+        const existingIds = new Set();
+        activityFeed.querySelectorAll('.feed-item').forEach(el => {
+            existingIds.add(el.dataset.piece);
+        });
+
+        // Remove items no longer in the top 10
+        activityFeed.querySelectorAll('.feed-item').forEach(el => {
+            if (!recent.find(e => String(e.piece) === el.dataset.piece)) {
+                el.remove();
+            }
+        });
+
+        // Add new items at the top
+        for (let i = recent.length - 1; i >= 0; i--) {
+            const entry = recent[i];
+            const id = String(entry.piece);
+            if (existingIds.has(id)) {
+                // Update time text
+                const existing = activityFeed.querySelector(`.feed-item[data-piece="${id}"]`);
+                if (existing) {
+                    existing.querySelector('.feed-item-time').textContent = timeAgo(entry.time);
+                }
+                continue;
+            }
+
+            const item = document.createElement('div');
+            item.className = 'feed-item';
+            item.dataset.piece = id;
+            item.innerHTML = `
+                <span class="feed-item-dot"></span>
+                <span class="feed-item-text">Puzzle piece ${entry.piece + 1} revealed</span>
+                <span class="feed-item-time">${timeAgo(entry.time)}</span>
+            `;
+            // Insert after feedEmpty (at the top of real items)
+            if (activityFeed.querySelector('.feed-item')) {
+                activityFeed.insertBefore(item, activityFeed.querySelector('.feed-item'));
+            } else {
+                activityFeed.appendChild(item);
+            }
+        }
+    }
+
+    // Update relative timestamps every 30s
+    setInterval(() => {
+        activityFeed.querySelectorAll('.feed-item').forEach(el => {
+            const piece = parseInt(el.dataset.piece);
+            const entry = feedEntries.find(e => e.piece === piece);
+            if (entry) {
+                el.querySelector('.feed-item-time').textContent = timeAgo(entry.time);
+            }
+        });
+    }, 30000);
+
+    let feedEntries = [];
 
     function revealPiece(index) {
         const piece = document.querySelector(`.puzzle-piece[data-index="${index}"]`);
@@ -114,10 +195,20 @@
     function listenForUpdates() {
         progressCollection.onSnapshot(snapshot => {
             foundPieces.clear();
+            feedEntries = [];
             snapshot.forEach(doc => {
-                foundPieces.add(parseInt(doc.id));
+                const pieceIndex = parseInt(doc.id);
+                foundPieces.add(pieceIndex);
+                const data = doc.data();
+                if (data.foundAt) {
+                    feedEntries.push({
+                        piece: pieceIndex,
+                        time: data.foundAt.toDate()
+                    });
+                }
             });
             updateProgress();
+            renderFeed(feedEntries);
         });
     }
 
