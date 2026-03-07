@@ -2,3 +2,5 @@ node_modules/
 qrcodes/
 service-account.json
 js/eggs.js
+package.json
+package-lock.json
