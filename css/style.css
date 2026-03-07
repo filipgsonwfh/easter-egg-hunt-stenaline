@@ -82,7 +82,7 @@ body {
 }
 
 .header-inner {
-    max-width: 720px;
+    max-width: 900px;
     width: 100%;
     margin: 0 auto;
     display: flex;
@@ -102,7 +102,7 @@ body {
 
 /* ===== Main ===== */
 .container {
-    max-width: 720px;
+    max-width: 900px;
     width: 100%;
     margin: 0 auto;
     padding: var(--space-3) var(--space-2);
@@ -153,7 +153,7 @@ body {
 }
 
 .stat-number {
-    font-size: 36px;
+    font-size: 42px;
     font-weight: var(--font-weight-bold);
     color: var(--core-blue);
     line-height: 1;
@@ -172,7 +172,7 @@ body {
 .progress-bar {
     background: var(--silver-ui);
     border-radius: 100px;
-    height: 8px;
+    height: 12px;
     overflow: hidden;
     margin-bottom: var(--space-1);
 }
@@ -224,7 +224,7 @@ body {
     inset: 0;
     background: url('../images/faviconV2.jpg') center center no-repeat;
     background-size: 40%;
-    opacity: 0.15;
+    opacity: 0.3;
 }
 
 .puzzle-piece.found {
