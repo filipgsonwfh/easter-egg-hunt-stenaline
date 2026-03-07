@@ -191,69 +191,6 @@ body {
     text-align: center;
 }
 
-/* ===== Activity Feed ===== */
-.feed-card {
-    padding: var(--space-2);
-}
-
-.feed-title {
-    font-size: 13px;
-    font-weight: var(--font-weight-bold);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--silver);
-    margin-bottom: var(--space-1);
-}
-
-.feed-list {
-    max-height: 200px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.feed-empty {
-    font-size: 13px;
-    color: var(--silver-light);
-    padding: var(--space-1) 0;
-}
-
-.feed-item {
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
-    padding: 6px var(--space-1);
-    border-left: 3px solid var(--core-blue);
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-    background: var(--silver-lighter);
-    font-size: 13px;
-    animation: feedSlideIn 0.3s ease;
-}
-
-.feed-item-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--core-blue);
-    flex-shrink: 0;
-}
-
-.feed-item-text {
-    flex: 1;
-    color: var(--tjara);
-}
-
-.feed-item-time {
-    font-size: 11px;
-    color: var(--silver);
-    flex-shrink: 0;
-}
-
-@keyframes feedSlideIn {
-    from { opacity: 0; transform: translateX(-8px); }
-    to { opacity: 1; transform: translateX(0); }
-}
 
 /* ===== Puzzle ===== */
 .puzzle-card {
