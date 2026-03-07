@@ -190,22 +190,18 @@
             });
 
             if (result.invalid) {
-                showModal('', 'Invalid egg', 'This QR code does not belong to the hunt.');
+                showToast('❌ Invalid QR code — this egg doesn\'t belong to the hunt.');
             } else if (result.alreadyFound) {
-                showModal('', 'Already found!', 'This egg has already been found by someone. Keep looking!');
+                showToast('🔍 This egg has already been found! Keep looking!');
             } else {
                 revealPiece(result.pieceIndex);
                 spawnEasterEggs();
                 const newCount = foundPieces.size + 1;
-                showModal(
-                    '',
-                    'Egg found!',
-                    `Puzzle piece ${result.pieceIndex + 1} of ${TOTAL_EGGS} revealed! (${newCount}/${TOTAL_EGGS} found)`
-                );
+                showToast(`🥚 Egg found! Piece ${result.pieceIndex + 1} of ${TOTAL_EGGS} revealed! (${newCount}/${TOTAL_EGGS})`);
             }
         } catch (err) {
             console.error('Error scanning egg:', err);
-            showModal('', 'Something went wrong', 'Could not register the egg. Please try again!');
+            showToast('⚠️ Something went wrong. Please try again!');
         }
     }
 
