@@ -198,8 +198,6 @@
             } else {
                 revealPiece(result.pieceIndex);
                 spawnEasterEggs();
-                const newCount = foundPieces.size + 1;
-                showToast(`🥚 Egg found! Piece ${result.pieceIndex + 1} of ${TOTAL_EGGS} revealed! (${newCount}/${TOTAL_EGGS})`);
             }
         } catch (err) {
             console.error('Error scanning egg:', err);
