@@ -128,7 +128,14 @@
     }
 
     function listenForUpdates() {
-        progressCollection.onSnapshot(snapshot => {
+        progressCollection.onSnapshot({ includeMetadataChanges: true }, snapshot => {
+            // Skip cached/stale data, only trust server
+            if (snapshot.metadata.fromCache) {
+                console.log('Skipping cached snapshot');
+                showContent();
+                return;
+            }
+
             const currentPieces = new Set();
             snapshot.docs.forEach(doc => {
                 currentPieces.add(parseInt(doc.id));
@@ -148,7 +155,7 @@
             initialLoad = false;
             updateProgress();
             showContent();
-            console.log('Snapshot: ' + currentPieces.size + ' pieces found');
+            console.log('Server snapshot: ' + currentPieces.size + ' pieces found');
         }, err => {
             console.error('Firestore listener error:', err);
             updateProgress();
