@@ -4,7 +4,7 @@
     const TOTAL_EGGS = 72;
     const COLS = 9;
     const ROWS = 8;
-    const PUZZLE_IMAGE = 'images/puzzle.jpg';
+    const PUZZLE_IMAGE = 'images/puzzle.png';
 
     const db = firebase.firestore();
     const eggsCollection = db.collection('eggs');
@@ -207,11 +207,9 @@
 
     // Dark mode
     const darkToggle = document.getElementById('darkToggle');
-    const darkToggleIcon = document.getElementById('darkToggleIcon');
 
     function setTheme(dark) {
         document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-        darkToggleIcon.textContent = dark ? '☀️' : '🌙';
         localStorage.setItem('theme', dark ? 'dark' : 'light');
     }
 

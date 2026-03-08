@@ -4,3 +4,13 @@ service-account.json
 js/eggs.js
 package.json
 package-lock.json
+
+# Font extras (we only need woff/woff2 for Regular, Medium, Bold)
+fonts.zip
+*.otf
+*.ttf
+fonts/StenaSans-Variable.*
+fonts/StenaSans-*Italic.*
+fonts/StenaSans-*Condensed.*
+fonts/StenaSans-Light.*
+fonts/stenaline-icon.*
