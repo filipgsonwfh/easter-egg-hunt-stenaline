@@ -146,7 +146,7 @@
                     if (!foundPieces.has(idx)) {
                         revealPiece(idx);
                         spawnEasterEggs();
-                        showToast(`🥚 Egg found! (${currentPieces.size}/${TOTAL_EGGS})`);
+                        showToast(`🥚 Egg found! ${TOTAL_EGGS - currentPieces.size} remaining!`);
                     }
                 });
             }
