@@ -130,25 +130,25 @@
     function listenForUpdates() {
         progressCollection.onSnapshot(snapshot => {
             const currentPieces = new Set();
-            const newPieces = [];
-            snapshot.forEach(doc => {
-                const idx = parseInt(doc.id);
-                currentPieces.add(idx);
-                if (!initialLoad && !foundPieces.has(idx)) {
-                    newPieces.push(idx);
-                }
+            snapshot.docs.forEach(doc => {
+                currentPieces.add(parseInt(doc.id));
             });
-            foundPieces = currentPieces;
+
             if (!initialLoad) {
-                newPieces.forEach(idx => {
-                    revealPiece(idx);
-                    spawnEasterEggs();
-                    showToast(`🥚 Egg found! Puzzle piece ${idx + 1} of ${TOTAL_EGGS} revealed!`);
+                currentPieces.forEach(idx => {
+                    if (!foundPieces.has(idx)) {
+                        revealPiece(idx);
+                        spawnEasterEggs();
+                        showToast(`🥚 Egg found! Puzzle piece ${idx + 1} of ${TOTAL_EGGS} revealed!`);
+                    }
                 });
             }
+
+            foundPieces = currentPieces;
             initialLoad = false;
             updateProgress();
             showContent();
+            console.log('Snapshot: ' + currentPieces.size + ' pieces found');
         }, err => {
             console.error('Firestore listener error:', err);
             updateProgress();
