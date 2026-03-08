@@ -22,7 +22,7 @@
     const modalClose = document.getElementById('modalClose');
     const allFoundBanner = document.getElementById('allFoundBanner');
 
-    let foundPieces = new Set();
+    let foundPieces = new Set();  // rebuilt on each snapshot
     let initialLoad = true;
 
     function buildPuzzleGrid() {
@@ -58,13 +58,13 @@
 
         document.querySelectorAll('.puzzle-piece').forEach(piece => {
             const idx = parseInt(piece.dataset.index);
-            if (foundPieces.has(idx)) {
-                piece.classList.add('found');
-            }
+            piece.classList.toggle('found', foundPieces.has(idx));
         });
 
         if (count >= TOTAL_EGGS) {
             allFoundBanner.classList.remove('hidden');
+        } else {
+            allFoundBanner.classList.add('hidden');
         }
     }
 
@@ -129,14 +129,16 @@
 
     function listenForUpdates() {
         progressCollection.onSnapshot(snapshot => {
+            const currentPieces = new Set();
             const newPieces = [];
             snapshot.forEach(doc => {
                 const idx = parseInt(doc.id);
+                currentPieces.add(idx);
                 if (!initialLoad && !foundPieces.has(idx)) {
                     newPieces.push(idx);
                 }
-                foundPieces.add(idx);
             });
+            foundPieces = currentPieces;
             if (!initialLoad) {
                 newPieces.forEach(idx => {
                     revealPiece(idx);
